@@ -21,6 +21,8 @@ const TARGETS = {
   'mac-arm64': { platform: 'darwin', arch: 'arm64', os: 'mac' },
   'mac-x64': { platform: 'darwin', arch: 'x64', os: 'mac' },
   'win-x64': { platform: 'win32', arch: 'x64', os: 'win' },
+  'linux-x64': { platform: 'linux', arch: 'x64', os: 'linux' },
+  'linux-arm64': { platform: 'linux', arch: 'arm64', os: 'linux' },
 } as const satisfies Record<DesktopPackageTargetName, {
   readonly platform: NodeJS.Platform
   readonly arch: string
@@ -239,7 +241,7 @@ export async function createDesktopUploadPlan(
   }
 
   const base = `deepseek-harness-${buildVersion}-${target.os}-${target.arch}`
-  const updaterExtension = target.platform === 'darwin' ? 'zip' : 'exe'
+  const updaterExtension = target.platform === 'darwin' ? 'zip' : target.platform === 'linux' ? 'AppImage' : 'exe'
   const updaterInfo = updateFileInfo(metadata.files[0], `${metadataFilename}.files[0]`, `${base}.${updaterExtension}`)
   const updaterPath = await verifyChecksummedArtifact(artifactsRoot, updaterInfo)
   const artifacts: DesktopUploadArtifact[] = []
@@ -254,6 +256,14 @@ export async function createDesktopUploadPlan(
       installerArtifact,
       uploadArtifact(updaterPath, binaryPrefix, 'application/zip'),
       uploadArtifact(blockmapPath, binaryPrefix, 'application/octet-stream'),
+    )
+  }
+  else if (target.platform === 'linux') {
+    const debPath = await requireArtifact(artifactsRoot, `${base}.deb`)
+    installerArtifact = uploadArtifact(updaterPath, binaryPrefix, 'application/x-executable')
+    artifacts.push(
+      installerArtifact,
+      uploadArtifact(debPath, binaryPrefix, 'application/vnd.debian.binary-package'),
     )
   }
   else {
