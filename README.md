@@ -40,6 +40,68 @@ pnpm dsh web
 
 `pnpm run build` prepares the repository artifacts. `pnpm dsh web` uses those built artifacts without rebuilding.
 
+### Linux (Ubuntu / Debian)
+
+#### Desktop App (.AppImage & .deb)
+
+DeepSeek Harness Desktop is available on Linux for both `x64` and `arm64` architectures.
+
+##### Running the AppImage
+
+```sh
+# Make the AppImage executable and launch
+chmod +x deepseek-harness-*-linux-x64.AppImage
+./deepseek-harness-*-linux-x64.AppImage
+```
+
+> [!TIP]
+> On Ubuntu 24.04 and newer, install `libfuse2t64` if your system does not yet have FUSE 2 installed:
+> ```sh
+> sudo apt update && sudo apt install -y libfuse2t64
+> ```
+
+##### Installing the Debian Package (.deb)
+
+```sh
+sudo apt update
+sudo apt install -y ./deepseek-harness-*-linux-amd64.deb
+
+# Launch from your application launcher or terminal
+deepseek-harness
+```
+
+#### Build and run Desktop from source on Linux
+
+1. **Install system prerequisites:**
+   - Linux (Ubuntu 22.04+ or Debian 12+ recommended)
+   - Node.js >= 24.9.0 and pnpm >= 11
+   - Build essentials and Python 3:
+     ```sh
+     sudo apt update && sudo apt install -y curl git python3 build-essential
+     ```
+
+2. **Clone and install dependencies:**
+   ```sh
+   git clone https://github.com/deepseek-ai/deepseek-harness.git
+   cd deepseek-harness
+   pnpm install
+   ```
+
+3. **Start Desktop in development mode:**
+   ```sh
+   pnpm run dev:desktop
+   ```
+
+4. **Package native Linux installers (.AppImage and .deb):**
+   ```sh
+   # Package for x64
+   pnpm run package:desktop:linux:x64
+
+   # Package for ARM64
+   pnpm run package:desktop:linux:arm64
+   ```
+   Built artifacts are output to `apps/desktop/.desktop-build/targets/linux-x64/artifacts/`.
+
 ## Community and support
 
 - Submit feedback or bug reports through [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions).

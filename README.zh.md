@@ -44,6 +44,67 @@ pnpm dsh web
 
 `pnpm run build` 会准备仓库产物。`pnpm dsh web` 会直接使用这些已构建产物，不会重新构建。
 
+### Linux（Ubuntu / Debian）
+
+#### 桌面端应用（.AppImage 与 .deb）
+
+DeepSeek Harness 桌面端支持 Linux，提供面向 `x64` 和 `arm64` 架构的 **AppImage** 与 **Debian 安装包（.deb）**。
+
+##### 运行 AppImage
+
+```sh
+# 赋予执行权限并启动
+chmod +x deepseek-harness-*-linux-x64.AppImage
+./deepseek-harness-*-linux-x64.AppImage
+```
+
+> [!TIP]
+> 在 Ubuntu 24.04 及更高版本上，如系统尚未预装 FUSE 2，请安装 `libfuse2t64`：
+> ```sh
+> sudo apt update && sudo apt install -y libfuse2t64
+> ```
+
+##### 安装 Debian 软件包（.deb）
+
+```sh
+sudo apt update
+sudo apt install -y ./deepseek-harness-*-linux-amd64.deb
+
+# 从应用程序启动器或终端运行
+deepseek-harness
+```
+
+#### 从源码构建并运行 Linux 桌面端
+
+1. **安装系统依赖：**
+   - Node.js >= 24.9.0 与 pnpm >= 11
+   - 基础编译链与 Python 3：
+     ```sh
+     sudo apt update && sudo apt install -y curl git python3 build-essential
+     ```
+
+2. **克隆仓库并安装依赖：**
+   ```sh
+   git clone https://github.com/deepseek-ai/deepseek-harness.git
+   cd deepseek-harness
+   pnpm install
+   ```
+
+3. **以开发模式运行桌面端：**
+   ```sh
+   pnpm run dev:desktop
+   ```
+
+4. **打包 Linux 本地安装包（.AppImage 与 .deb）：**
+   ```sh
+   # 打包 x64
+   pnpm run package:desktop:linux:x64
+
+   # 打包 ARM64
+   pnpm run package:desktop:linux:arm64
+   ```
+   构建产物输出至 `apps/desktop/.desktop-build/targets/linux-x64/artifacts/` 目录。
+
 ## 社区与支持
 
 - 通过 [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions) 提交反馈或 bug 报告。
