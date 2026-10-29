@@ -258,6 +258,7 @@ export function createElectronBuilderConfig(
       icon: fileURLToPath(new URL('../resources/icon.png', import.meta.url)),
       maintainer: 'Hangzhou DeepSeek Artificial Intelligence Co., Ltd.',
       synopsis: 'Electron desktop shell for DeepSeek Harness',
+      executableName: 'deepseek-harness',
       desktop: {
         StartupWMClass: 'DeepSeek Harness',
       },
